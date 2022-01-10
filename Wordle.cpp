@@ -8998,7 +8998,7 @@ int main() noexcept
                std::remove_if(
                   std::begin(words),
                   std::end(words),
-                  [letter](const std::string& word) noexcept { return word.find(letter) == std::string::npos; }),
+                  [letter, resultsIndex](const std::string& word) noexcept { return word.find(letter) == std::string::npos || word[resultsIndex] == letter; }),
                std::end(words));
             break;
          default:
