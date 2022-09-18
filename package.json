@@ -1,0 +1,21 @@
+{
+  "name": "assorted",
+  "version": "1.0.0",
+  "description": "\"# Assorted\"",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sARY77/Assorted.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sARY77/Assorted/issues"
+  },
+  "homepage": "https://github.com/sARY77/Assorted#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.25.2"
+  }
+}
