@@ -1,0 +1,8 @@
+https://en.wikipedia.org/wiki/PDP-11_architecture
+https://pdp-11.org.ru/files/docs/misc/pdp11-instr.pdf
+https://pdp-11.org.ru/files/docs/misc/pdp11-cpu.pdf
+http://ftp.dbit.com/pub/pdp11/faq/faq.pages/PDPinst.html
+https://akrzemi1.wordpress.com/2014/04/24/noexcept-what-for/
+https://regex101.com/
+https://learn.microsoft.com/en-us/visualstudio/test/microsoft-visualstudio-testtools-cppunittestframework-api-reference?view=vs-2022
+https://en.cppreference.com/w/cpp/language/operator_precedence
