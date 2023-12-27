@@ -1,0 +1,123 @@
+<html>
+    <head
+        ><title>Concurrent Requests Demo</title>
+    </head>
+    <body>
+        <script>
+var url = "";
+var totalNumberOfRequests = 0;
+var numberOfConcurrentRequests = 0;
+var requestTimeout = 0;
+
+var numberOfRequests = 0;
+var maxStateTime = [0, 0, 0, 0, 0];
+var numberOfCompletedRequests = 0;
+var numberOfErrors = 0;
+var numberOfTimeouts = 0;
+
+function onReadyStateChange(startTime, readyState, status) {
+    var stateTime = Date.now() - startTime;
+    if (maxStateTime[readyState] < stateTime && stateTime < requestTimeout)
+        maxStateTime[readyState] = stateTime;
+    if (readyState === 4) {
+        ++numberOfCompletedRequests;
+        if (stateTime >= requestTimeout)
+            ++numberOfTimeouts;
+        else if (status !== 200)
+            ++numberOfErrors;
+        probeUrl();
+    }
+}
+
+function probeUrl() {
+    if (numberOfRequests >= totalNumberOfRequests)
+        return;
+    ++numberOfRequests;
+    var startTime = Date.now();
+    onReadyStateChange(startTime, 0, 0);
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        onReadyStateChange(startTime, this.readyState, this.status);
+    };
+    xhr.open('GET', url, true);
+    xhr.timeout = requestTimeout;
+    xhr.responseType = 'arraybuffer';
+    xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+    xhr.setRequestHeader('Cache-Control', 'no-cache');
+    xhr.send();
+}
+
+function updateResults() {
+    document.getElementById("numberOfRequests").value = numberOfRequests;
+    for (var i = 0; i < 5; ++i)
+        document.getElementById("maxStateTime".concat(i)).value = maxStateTime[i];
+    document.getElementById("numberOfCompletedRequests").value = numberOfCompletedRequests;
+    document.getElementById("numberOfErrors").value = numberOfErrors;
+    document.getElementById("numberOfTimeouts").value = numberOfTimeouts;
+    var connection = navigator.connection;
+    if (connection) {
+        document.getElementById("downlink").value = connection.downlink;
+        document.getElementById("rtt").value = connection.rtt;
+    }
+    if (numberOfCompletedRequests !== totalNumberOfRequests) {
+        setTimeout(updateResults, 100);
+    }
+}
+
+function start() {
+    url = document.getElementById("url").value;
+    totalNumberOfRequests = document.getElementById("totalNumberOfRequests").value;
+    numberOfConcurrentRequests = document.getElementById("numberOfConcurrentRequests").value;
+    requestTimeout = document.getElementById("requestTimeout").value;
+    numberOfRequests = 0;
+    maxStateTime = [0, 0, 0, 0, 0];
+    numberOfCompletedRequests = 0;
+    numberOfErrors = 0;
+    numberOfTimeouts = 0;
+    for (var i = 0; i < numberOfConcurrentRequests; ++i)
+        probeUrl();
+    updateResults();
+}
+        </script>
+        <label>Concurrent Requests Demo</label>
+        <br>
+        <label for="url">URL:</label>
+        <input id="url" type="text" value="https://localhost:7003/sleepAndReturn/?numberOfMillisecondsToSleep=3000&numberOfBytesToReturn=1000">
+        <br>
+        <label for="totalNumberOfRequests">Total number of requests:</label>
+        <input id="totalNumberOfRequests" type="number" min="1" max="10000" value="20">
+        <br>
+        <label for="numberOfConcurrentRequests">Number of concurrent requests:</label>
+        <input id="numberOfConcurrentRequests" type="number" min="1" max="1000" value="10">
+        <br>
+        <label for="requestTimeout">Request timeout:</label>
+        <input id="requestTimeout" type="number" min="10000" max="30000" value="1000">
+        <br>
+        <input id="start" type="button" value="Start" onclick="start()">
+        <br>
+        <label for="numberOfRequests">Number of requests:</label>
+        <input id="numberOfRequests" type="number" readOnly>
+        <br>
+        <label for="maxStateTime0">Max state time:</label>
+        <input id="maxStateTime0" type="number" readOnly>
+        <input id="maxStateTime1" type="number" readOnly>
+        <input id="maxStateTime2" type="number" readOnly>
+        <input id="maxStateTime3" type="number" readOnly>
+        <input id="maxStateTime4" type="number" readOnly>
+        <br>
+        <label for="numberOfCompletedRequests">Number of completed requests:</label>
+        <input id="numberOfCompletedRequests" type="number" readOnly>
+        <br>
+        <label for="numberOfErrors">Number of errors:</label>
+        <input id="numberOfErrors" type="number" readOnly>
+        <br>
+        <label for="numberOfTimeouts">Number of timeouts:</label>
+        <input id="numberOfTimeouts" type="number" readOnly>
+        <br>
+        <label for="downlink">Downlink:</label>
+        <input id="downlink" type="number" readOnly>
+        <br>
+        <label for="rtt">Rtt:</label>
+        <input id="rtt" type="number" readOnly>
+    </body>
+</html>
