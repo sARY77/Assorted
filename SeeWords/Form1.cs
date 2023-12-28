@@ -11,7 +11,7 @@ namespace SeeWords
 	public partial class Form1 : Form
 	{
 		const string endpoint = "seewords.cognitiveservices.azure.com";
-		const string apiKey = "bd6e19a7ce924951a7e8db859fd4ae6c";
+		const string apiKey = "";
 		const int maxSize = 1000;
 		private class OcrResponse
 		{
